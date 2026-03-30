@@ -83,7 +83,7 @@ def get_league_of_club(club: str):
     return run_query(query, {"club": club})
 
 
-def get_league_info(league: str):
+def get_clubs_of_league(league: str):
     """Returns the name of a league and the clubs in it if it exists."""
     query = """
     MATCH (l:League)

@@ -5,7 +5,7 @@ from toolkit.graph_tools import (
     get_players_by_league,
     get_players_by_club,
     get_league_of_club,
-    get_league_info,
+    get_clubs_of_league,
 )
 
 TOOLS = {
@@ -15,5 +15,5 @@ TOOLS = {
     "get_players_by_league": get_players_by_league,
     "get_players_by_club": get_players_by_club,
     "get_league_of_club": get_league_of_club,
-    "get_league_info": get_league_info,
+    "get_clubs_of_league": get_clubs_of_league,
 }

@@ -11,12 +11,6 @@ from src.executor import execute
 
 if __name__ == "__main__":
     while True:
-        try:
-            query = input("\nAsk: ")
-            response = execute(query)
-            print("\nAnswer:", response)
-        except KeyboardInterrupt:
-            print("\nExiting...")
-            break
-        except Exception as e:
-            print(f"\n[System Error] An unexpected error occurred: {e}")
+        query = input("\nAsk: ")
+        response = execute(query)
+        print("\nAnswer:", response)

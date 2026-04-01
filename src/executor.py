@@ -2,6 +2,7 @@
 
 import json
 import re
+from typing import Any
 from src.llm_router import GeminiRouter
 from src.agent import TOOLS
 from src.formatter import format_response
@@ -127,6 +128,17 @@ def decide_tool(query):
 
     User question:
     {query}
+
+    Fuzzy Input Handling:
+    - The user's query may contain TYPOS, abbreviations, or misspelled words
+    - You MUST interpret the INTENT, not the literal text
+    - Examples:
+        "which clu neymr play"  → intent: which club does Neymar play for → tool: get_player_info, player_name: "Neymar"
+        "nationl of cristino"   → intent: nationality of Cristiano Ronaldo → tool: get_player_info, player_name: "Cristiano Ronaldo"
+        "premr lg players"      → intent: players in Premier League → tool: get_players_by_league, league: "Premier League"
+    - Always use the CORRECTED, real entity name in the params (e.g. "Neymar" not "neymr")
+    - Pick the tool based on what information the user is ASKING FOR, not what words they used
+
     ANSWER ONLY BASED ON THE QUERY
     ONLY OUTPUT JSON.
     """
@@ -135,7 +147,11 @@ def decide_tool(query):
     print("in here")
     print("ROUTER RESPONSE: ",response)
     print("in here")
-    return json.loads(response)
+    try:
+        return json.loads(response)
+    except json.JSONDecodeError:
+        print(f"\n[ROUTER ERROR] The LLM failed to return a valid JSON routing decision. Response was:\n{response}")
+        return {"calls": []}
 
 
 def execute(query):
@@ -169,9 +185,11 @@ def execute(query):
         step_id = call.get("id", f"step_{len(results_map)}")
         tool_name = call.get("tool")
         raw_params = call.get("params", {})
+        if not isinstance(raw_params, dict):
+            raw_params = {}
 
         # Resolve parameter dependencies ($step_id.field)
-        resolved_params = {}
+        resolved_params: dict[str, Any] = {}
         for k, v in raw_params.items():
             if isinstance(v, str) and v.startswith("$"):
                 try:
@@ -195,9 +213,16 @@ def execute(query):
             else:
                 resolved_params[k] = v
 
+        print(f"\n[DEBUG] results_map before {step_id}: {results_map}")
+        print(f"[DEBUG] Resolved params for {step_id}: {resolved_params}")
         print(f"Executing {step_id}: {tool_name} with {resolved_params}")
 
-        if tool_name in TOOLS:
+        # Guard: skip this step if any dependency-resolved param is None
+        none_params = [k for k, v in resolved_params.items() if v is None]
+        if none_params:
+            print(f"[WARNING] Skipping {step_id} ({tool_name}): resolved params {none_params} are None — step dependency may have failed or returned an unexpected field name.")
+            results_map[step_id] = None
+        elif tool_name in TOOLS:
             try:
                 out = TOOLS[tool_name](**resolved_params)
                 results_map[step_id] = out

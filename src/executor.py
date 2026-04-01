@@ -133,7 +133,9 @@ def execute(query):
                         ref_id, field = v[1:].split(".", 1)
                         prev_out = results_map.get(ref_id)
                         
-                        if prev_out and isinstance(prev_out, list) and len(prev_out) > 0:
+                        if field == "output":
+                            resolved_params[k] = prev_out
+                        elif prev_out and isinstance(prev_out, list) and len(prev_out) > 0:
                             # Typically our tools return a list of dicts. Pick the first one.
                             resolved_params[k] = prev_out[0].get(field)
                         elif prev_out and isinstance(prev_out, dict):

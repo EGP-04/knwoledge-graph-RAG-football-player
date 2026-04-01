@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, List, Any
 
 from langchain_core.tools import tool
 
@@ -12,6 +12,7 @@ from toolkit.graph_tools import (
     get_players_by_club as _get_players_by_club,
     get_league_of_club as _get_league_of_club,
     get_clubs_of_league as _get_clubs_of_league,
+    filter_players as _filter_players,
 )
 
 
@@ -93,6 +94,20 @@ def get_clubs_of_league(league: str):
 get_clubs_of_league.response_format = "List[Dict(league, clubs)]"
 
 
+@tool
+def filter_players(player_names: List[Any], nation: Optional[str] = None, position: Optional[str] = None, club: Optional[str] = None):
+    """
+    Filter a given list of player names by nation, position, and/or club.
+    Can accept a simple list of names (List[str]) or the output from another tool (List[Dict]).
+    Use this to narrow down a list of candidates based on specific criteria.
+    """
+    return _filter_players(player_names, nation, position, club)
+
+
+filter_players.response_format = "List[Dict(name)]"
+
+
+
 RETRIEVER_TOOLS = [
     get_player_info,
     get_players_by_position,
@@ -101,6 +116,7 @@ RETRIEVER_TOOLS = [
     get_players_by_club,
     get_league_of_club,
     get_clubs_of_league,
+    filter_players,
 ]
 
 

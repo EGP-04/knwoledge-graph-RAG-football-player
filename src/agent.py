@@ -6,6 +6,7 @@ from toolkit.graph_tools import (
     get_players_by_club,
     get_league_of_club,
     get_clubs_of_league,
+    filter_players,
 )
 
 TOOLS = {
@@ -16,4 +17,5 @@ TOOLS = {
     "get_players_by_club": get_players_by_club,
     "get_league_of_club": get_league_of_club,
     "get_clubs_of_league": get_clubs_of_league,
+    "filter_players": filter_players,
 }

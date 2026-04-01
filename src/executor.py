@@ -120,12 +120,14 @@ def execute(query):
         tool_name = call.get("tool")
         raw_params = call.get("params", {})
 
-        # Resolve parameter dependencies ($step_id.field)
+        # Separate raw LLM params from dynamic graph references
         resolved_params = {}
+        to_resolve = {}
+        
         for k, v in raw_params.items():
             if isinstance(v, str) and v.startswith("$"):
                 try:
-                    # Format: $step_id.field
+                    # Resolve dynamic reference: $step_id.field
                     if "." in v:
                         ref_id, field = v[1:].split(".", 1)
                         prev_out = results_map.get(ref_id)
@@ -133,28 +135,29 @@ def execute(query):
                         if field == "output":
                             resolved_params[k] = prev_out
                         elif prev_out and isinstance(prev_out, list) and len(prev_out) > 0:
-                            # Typically our tools return a list of dicts. Pick the first one.
                             resolved_params[k] = prev_out[0].get(field)
                         elif prev_out and isinstance(prev_out, dict):
                             resolved_params[k] = prev_out.get(field)
                         else:
                             resolved_params[k] = None
                     else:
-                        # Fallback if no dot: use the whole previous result
                         resolved_params[k] = results_map.get(v[1:])
                 except (ValueError, AttributeError):
                     resolved_params[k] = v
             else:
-                resolved_params[k] = v
-
-        print(f"Executing {step_id}: {tool_name} with {resolved_params}")
+                # This is a raw value from LLM, mark for semantic resolution
+                to_resolve[k] = v
 
         if tool_name in TOOLS:
             try:
-                # Semantic entity resolution
-                resolved_params = extractor.resolve_params(tool_name, resolved_params)
-                print(f"[DEBUG] Final resolved params for {step_id}: {resolved_params}")
-
+                # 1. Semantic resolution only for raw LLM values
+                if to_resolve:
+                    resolved_static = extractor.resolve_params(tool_name, to_resolve)
+                    resolved_params.update(resolved_static)
+                
+                print(f"Executing {step_id}: {tool_name} with {resolved_params}")
+                
+                # 2. Final tool execution
                 out = TOOLS[tool_name](**resolved_params)
                 results_map[step_id] = out
                 all_context.append({

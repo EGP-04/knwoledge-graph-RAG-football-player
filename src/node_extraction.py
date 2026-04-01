@@ -20,6 +20,25 @@ class NodeExtractor:
     
     COLUMNS = ['name', 'position', 'nationality', 'club', 'league']
     
+    # Map long-form position names to database short-forms
+    POSITION_MAP = {
+        "striker": "ST",
+        "left wing": "LW",
+        "right wing": "RW",
+        "centre forward": "CF",
+        "left midfield": "LM",
+        "right midfield": "RM",
+        "centre midfield": "CM",
+        "centre attacking midfield": "CAM",
+        "centre defensive midfield": "CDM",
+        "centre back": "CB",
+        "right back": "RB",
+        "left back": "LB",
+        "right wing back": "RWB",
+        "left wing back": "LWB",
+        "goal keeper": "GK"
+    }
+
     # Map tool parameter names to CSV column names
     PARAM_MAP = {
         'player_name': 'name',
@@ -58,9 +77,15 @@ class NodeExtractor:
             unique_values = self.df[col].dropna().unique().tolist()
             if not unique_values:
                 continue
+
+            # Special case for position: index both short and long forms
+            if col == 'position':
+                indexed_values = list(set(unique_values + list(self.POSITION_MAP.keys())))
+            else:
+                indexed_values = unique_values
                 
             # Compute embeddings
-            embeddings = self.model.encode(unique_values, show_progress_bar=False)
+            embeddings = self.model.encode(indexed_values, show_progress_bar=False)
             embeddings = np.array(embeddings).astype('float32')
             
             # Normalize for cosine similarity
@@ -72,7 +97,7 @@ class NodeExtractor:
             index.add(embeddings)
             
             self.indices[col] = index
-            self.id_to_value[col] = unique_values
+            self.id_to_value[col] = indexed_values
             
         print(f"[NodeExtractor] Successfully indexed {len(self.indices)} categories.")
 
@@ -88,7 +113,21 @@ class NodeExtractor:
         if col not in self.COLUMNS:
             return text
 
-        # 1. Semantic Search (FAISS)
+        # 1. Position Mapping (Special Case)
+        if col == 'position':
+            normalized = text.strip().lower()
+            # Direct match to short form (case-insensitive check)
+            short_forms = [v.lower() for v in self.POSITION_MAP.values()]
+            if normalized in short_forms:
+                return text.upper()
+            
+            # Match to long form
+            if normalized in self.POSITION_MAP:
+                resolved = self.POSITION_MAP[normalized]
+                print(f"[NodeExtractor] Position Map: '{text}' -> '{resolved}'")
+                return resolved
+
+        # 2. Semantic Search (FAISS)
         if SEMANTIC_SEARCH_AVAILABLE and col in self.indices:
             try:
                 query_vec = self.model.encode([text])
@@ -102,6 +141,11 @@ class NodeExtractor:
                 if score > 0.6:  # Similarity threshold
                     if best_match.lower() != text.lower():
                         print(f"[NodeExtractor] Semantic Resolve: '{text}' -> '{best_match}' (score: {score:.2f})")
+                    
+                    # Ensure position returns the short form
+                    if col == 'position' and best_match.lower() in self.POSITION_MAP:
+                        return self.POSITION_MAP[best_match.lower()]
+                    
                     return best_match
             except Exception as e:
                 print(f"[ERROR] Semantic search failed for '{text}': {e}")
@@ -117,9 +161,15 @@ class NodeExtractor:
 
         matches = difflib.get_close_matches(text, candidates, n=1, cutoff=0.6)
         if matches:
-            if matches[0].lower() != text.lower():
-                print(f"[NodeExtractor] Fuzzy Resolve: '{text}' -> '{matches[0]}'")
-            return matches[0]
+            best_match = matches[0]
+            if best_match.lower() != text.lower():
+                print(f"[NodeExtractor] Fuzzy Resolve: '{text}' -> '{best_match}'")
+            
+            # Ensure position returns the short form
+            if col == 'position' and best_match.lower() in self.POSITION_MAP:
+                return self.POSITION_MAP[best_match.lower()]
+                
+            return best_match
 
         return text
 

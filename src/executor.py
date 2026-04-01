@@ -16,7 +16,6 @@ def decide_tool(query):
     """
 
     tool_context = get_retriever_tool_context()
-    print("TOOL CONTEXT: ",tool_context)
     prompt = f"""
     You are a strict JSON generator.
 
@@ -84,11 +83,8 @@ def decide_tool(query):
     ANSWER ONLY BASED ON THE QUERY
     ONLY OUTPUT JSON.
     """
-    print("in here")
     response = router.generate(prompt)
-    print("in here")
     print("ROUTER RESPONSE: ",response)
-    print("in here")
     return json.loads(response)
 
 

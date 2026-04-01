@@ -2,61 +2,17 @@
 
 import json
 import re
+<<<<<<< fix/remove-venv
 from typing import Any
 from src.llm_router import GeminiRouter
+=======
+from src.llm_router import Router
+>>>>>>> main
 from src.agent import TOOLS
 from src.formatter import format_response
 from toolkit.retriever_tools import get_retriever_tool_context
 
-router = GeminiRouter()
-
-_STOPWORDS = {
-    "give",
-    "info",
-    "information",
-    "about",
-    "on",
-    "who",
-    "is",
-    "are",
-    "tell",
-    "me",
-    "show",
-    "list",
-    "players",
-    "player",
-    "in",
-    "the",
-    "a",
-    "an",
-    "for",
-    "of",
-    "from",
-    "with",
-}
-
-
-def _guess_name_from_query(q: str) -> str | None:
-    q = q.strip()
-    if not q:
-        return None
-
-    # Prefer text after "about" / "on" if present.
-    m = re.search(r"\b(?:about|on)\s+(.+)$", q, flags=re.IGNORECASE)
-    if m:
-        candidate = m.group(1).strip(" ?.")
-        print("Candidate",candidate)
-        if candidate:
-            return candidate
-
-    # Otherwise: pick the last 1-3 tokens that are not stopwords.
-    tokens = re.findall(r"[A-Za-zÀ-ÖØ-öø-ÿ'’-]+", q)
-    tokens = [t for t in tokens if t.lower() not in _STOPWORDS]
-    if not tokens:
-        return None
-    print("Candidate",candidate)
-    return " ".join(tokens[-3:])
-
+router = Router()
 
 def decide_tool(query):
     """

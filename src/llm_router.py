@@ -1,6 +1,6 @@
 from src.local_llm import LocalLLM
 
-class GeminiRouter:
+class Router:
     """
     Router that uses the local LLM hosted via LM Studio.
     Renamed/kept for compatibility with existing imports.

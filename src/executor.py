@@ -64,6 +64,7 @@ def decide_tool(query):
     """
 
     tool_context = get_retriever_tool_context()
+    print("TOOL CONTEXT: ",tool_context)
     prompt = f"""
     You are a strict JSON generator.
 

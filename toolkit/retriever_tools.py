@@ -11,7 +11,7 @@ from toolkit.graph_tools import (
     get_players_by_league as _get_players_by_league,
     get_players_by_club as _get_players_by_club,
     get_league_of_club as _get_league_of_club,
-    get_league_info as _get_league_info,
+    get_clubs_of_league as _get_clubs_of_league,
 )
 
 
@@ -24,12 +24,18 @@ def get_player_info(player_name: str):
     return _get_player_info(player_name)
 
 
+get_player_info.response_format = "List[Dict(club, league, position, nationality)]"
+
+
 @tool
 def get_players_by_position(position: str, limit: int = 20):
     """
     Get a list of player names who play at a specific position (e.g., 'Forward', 'Midfielder').
     """
     return _get_players_by_position(position, limit)
+
+
+get_players_by_position.response_format = "List[Dict(name)]"
 
 
 @tool
@@ -40,12 +46,18 @@ def get_players_by_nationality(nationality: str, limit: int = 20):
     return _get_players_by_nationality(nationality, limit)
 
 
+get_players_by_nationality.response_format = "List[Dict(name)]"
+
+
 @tool
 def get_players_by_league(league: str, limit: int = 20):
     """
     Get a list of player names playing in a specific league (e.g., 'Premier League').
     """
     return _get_players_by_league(league, limit)
+
+
+get_players_by_league.response_format = "List[Dict(name)]"
 
 
 @tool
@@ -56,6 +68,9 @@ def get_players_by_club(club: str, limit: int = 20):
     return _get_players_by_club(club, limit)
 
 
+get_players_by_club.response_format = "List[Dict(name)]"
+
+
 @tool
 def get_league_of_club(club: str):
     """
@@ -64,12 +79,18 @@ def get_league_of_club(club: str):
     return _get_league_of_club(club)
 
 
+get_league_of_club.response_format = "List[Dict(league)]"
+
+
 @tool
-def get_league_info(league: str):
+def get_clubs_of_league(league: str):
     """
-    Get information about a particular league (confirms its name and existence).
+    Get the clubs of a particular league.
     """
-    return _get_league_info(league)
+    return _get_clubs_of_league(league)
+
+
+get_clubs_of_league.response_format = "List[Dict(league, clubs)]"
 
 
 RETRIEVER_TOOLS = [
@@ -79,7 +100,7 @@ RETRIEVER_TOOLS = [
     get_players_by_league,
     get_players_by_club,
     get_league_of_club,
-    get_league_info,
+    get_clubs_of_league,
 ]
 
 
@@ -90,11 +111,10 @@ def get_retriever_tool_context() -> str:
 
     lines = ["Tooling available to query the football knowledge graph:"]
     for t in RETRIEVER_TOOLS:
-        # langchain tool has .name and .description
         desc = t.description or ""
-
-        # Best-effort: include argument names for the model.
-        param_names = []
+        
+        # 1. Inputs: name, type, and description if available
+        input_info = []
         args_schema = getattr(t, "args_schema", None)
         if args_schema is not None:
             try:
@@ -104,12 +124,29 @@ def get_retriever_tool_context() -> str:
                     schema = args_schema.schema()  # pydantic v1
                 except Exception:
                     schema = {}
+            
             props = schema.get("properties") or {}
-            param_names = list(props.keys())
+            required = schema.get("required") or []
+            
+            for p_name, p_info in props.items():
+                p_type = p_info.get("type", "any")
+                p_desc = p_info.get("description", "")
+                p_req = "required" if p_name in required else "optional"
+                
+                if p_desc:
+                    input_info.append(f"{p_name}: {p_type} ({p_req}, {p_desc})")
+                else:
+                    input_info.append(f"{p_name}: {p_type} ({p_req})")
 
-        if param_names:
-            lines.append(f"- {t.name}: {desc} (params: {', '.join(param_names)})")
-        else:
-            lines.append(f"- {t.name}: {desc}")
+        # 2. Output: response_format attribute if present
+        output_info = getattr(t, "response_format", "Unknown")
+
+        tool_line = f"- {t.name}: {desc}"
+        if input_info:
+            tool_line += f"\n  - Inputs: {', '.join(input_info)}"
+        tool_line += f"\n  - Output: {output_info}"
+        
+        lines.append(tool_line)
+        
     return "\n".join(lines)
 

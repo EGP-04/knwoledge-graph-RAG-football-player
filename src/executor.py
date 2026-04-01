@@ -5,6 +5,7 @@ import re
 from src.llm_router import Router
 from src.agent import TOOLS
 from src.formatter import format_response
+from src.node_extraction import extractor
 from toolkit.retriever_tools import get_retriever_tool_context
 
 router = Router()
@@ -154,6 +155,10 @@ def execute(query):
 
         if tool_name in TOOLS:
             try:
+                # Semantic entity resolution
+                resolved_params = extractor.resolve_params(tool_name, resolved_params)
+                print(f"[DEBUG] Final resolved params for {step_id}: {resolved_params}")
+
                 out = TOOLS[tool_name](**resolved_params)
                 results_map[step_id] = out
                 all_context.append({

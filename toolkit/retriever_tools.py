@@ -6,7 +6,7 @@ from langchain_core.tools import tool
 
 from toolkit.graph_tools import (
     get_player_info as _get_player_info,
-    get_players_by_position as _get_players_by_position,
+    get_players_by_position_group as _get_players_by_position_group,
     get_players_by_nationality as _get_players_by_nationality,
     get_players_by_league as _get_players_by_league,
     get_players_by_club as _get_players_by_club,
@@ -29,14 +29,14 @@ get_player_info.response_format = "List[Dict(club, league, position, nationality
 
 
 @tool
-def get_players_by_position(position: str, limit: int = 20):
+def get_players_by_position_group(group: str, limit: int = 20):
     """
-    Get a list of player names who play at a specific position (e.g., 'Forward', 'Midfielder').
+    Get a list of player names who play at a specific position category (e.g., 'Forward', 'Midfielder').
     """
-    return _get_players_by_position(position, limit)
+    return _get_players_by_position_group(group, limit)
 
 
-get_players_by_position.response_format = "List[Dict(name)]"
+get_players_by_position_group.response_format = "List[Dict(name)]"
 
 
 @tool
@@ -110,7 +110,7 @@ filter_players.response_format = "List[Dict(name)]"
 
 RETRIEVER_TOOLS = [
     get_player_info,
-    get_players_by_position,
+    get_players_by_position_group,
     get_players_by_nationality,
     get_players_by_league,
     get_players_by_club,

@@ -1,1 +1,41 @@
 id,question,KG_RAG_response,KG_RAG_time,trad_RAG_response,trad_RAG_time
+1,Which players share the same nationality as L. Messi?,"The players are E. Lamela, L. Desábato, F. Sambueza, J. Bottinelli, T. Pochettino, M. Laba, K. Mac Allister, B. Merlini, M. Caraglio, and G. Burdisso.",83.463,"None",19.438
+2,Which club does Cristiano Ronaldo play for?,"The player is a Portuguese left winger (LW) who plays for Real Madrid in La Liga.",114.551,"Real Madrid",5.733
+3,Which players share the same nationality as Cristiano Ronaldo?,"The players are Fábio Coentrão, Rúben Ribeiro, Francisco Conceição, Pedro Rebocho, João Talocha, Tiago Gouveia, Fábio Carvalho, Bruno Xadas, M. Pereira Lage, and David Simão.",95.056,"Ricardo Carvalho",12.118
+4,Which league does R. Lewandowski play in?,"A Polish striker plays for FC Bayern München in the Bundesliga.",49.848,"Bundesliga",6.168
+5,Which players share the same nationality as Neymar Jr?,"The players on the team are Willian José, Élton, Edercinho Sepa, Mardial Cunha, Luis Henrique, Raphael Martinho, Mauro, Camilo Sanvezzo, Adilson, and Adolfinho Padilha.",80.074,"Júnior Negão and David Neres.",8.375
+6,Which club does M. Neuer play for?,"The goalkeeper for FC Bayern München in the Bundesliga is German.",76.33,"FC Bayern München",6.427
+7,Which players share the same nationality as K. Mbappé?,"The players retrieved are B. Lecomte, J. Chotard, J. Delaplace, A. Aouchiche, L. Carole, M. Coutadeur, A. Cissokho, B. Nivet, B. Cheyrou, and C. Jean.",162.311,"A. Martial",17.15
+8,Which club does K. De Bruyne play for?,"Manchester City's Premier League team features a Belgian central attacking midfielder (CAM).",78.175,"Manchester City",5.883
+9,Which players share the same nationality as M. Neuer?,"The players are S. Bender, P. Jaeckel, A. Hack, E. Martel, M. Feulner, M. Bakalorz, T. Sippel, F. Reese, C. Moritz, and M. Leitner.",154.416,"No other players in the context share the same nationality (Germany) as M. Neuer.",11.318
+10,Which league does Neymar Jr play in?,"The player is a Brazilian left winger who plays for Paris Saint Germain in Ligue 1.",98.784,"Ligue 1",5.842
+11,Which players share the same nationality as H. Kane?,"The players are A. Cole, A. Tuanzebe, F. Woodman, R. Taylor, H. Choudhury, C. Burgess, T. Ince, P. Roberts, C. Wickham, and D. Spence.",85.573,"J. Hart and R. Sterling",8.145
+12,Which club does Alisson play for?,"He plays for Liverpool.",84.017,"The information is not in the context. None of the listed players have the surname ""Alisson"".",8.851
+13,Which players share the same nationality as V. van Dijk?,"The players are O. Wijndal, W. Janssen, J. Brenet, A. Nouri, M. Bakker, B. Kuwas, M. van Ewijk, T. Ouwejan, J. Drommel, and S. Schaars.",73.367,"M. Dijks, M. van de Ven, D. van de Beek, J. Willems",23.077
+14,Which league does L. Messi play in?,"The player is an Argentine right winger who plays for FC Barcelona in La Liga.",82.988,"La Liga",8.476
+15,Which players share the same nationality as K. De Bruyne?,"The players are B. Mechele, J. Kayembe, B. Manuel, R. Schoofs, B. Verstraete, F. Daems, J. De Sart, A. Sambi Lokonga, S. Schrijvers, and J. Gillet.",99.978,"None of the other players in the context share Belgium as their nationality (K. De Bruyne's nationality is listed as Belgium).",10.019
+16,Which club does K. Mbappé play for?,"He plays for Paris Saint Germain in Ligue 1 as a French striker (ST).",101.436,"Paris Saint Germain",6.292
+17,Which players share the same nationality as M. Salah?,"The players retrieved are M. Mohamed, Kahraba, O. Marmoush, R. Sobhi, A. Elmohamady, A. Hassan, A. Ghazal, Trezeguet, M. Elneny, and A. Hegazi.",107.551,"M. Mohamed",10.551
+18,Which league does Cristiano Ronaldo play in?,"He plays for Real Madrid.",107.705,"La Liga",5.954
+19,Which players share the same nationality as R. Lewandowski?,"The players are J. Moder, A. Buksa, D. Perquis, L. Obraniak, B. Białkowski, P. Olkowski, P. Kieszek, D. Szymański, M. Klich, and P. Dawidowicz.",91.742,"N. Zalewski, E. Polański, W. Szczęsny, Ł. Fabiański",16.89
+20,Which club does Casemiro play for?,"He is a Brazilian central defender (CDM) who plays for Manchester United in the Premier League.",102.238,"Manchester United",5.438
+21,Who are the teammates of L. Messi at FC Barcelona?,"The players mentioned are Mingueza, Aleñá, Riqui Puig, Eric García, Trincão, Ansu Fati, Junior Firpo, Aleix Vidal, Adriano, and Denis Suárez.",139.388,"L. Suárez",16.867
+22,Which league does R. Lewandowski's club FC Bayern München belong to?,"The Bundesliga is Germany's top football league.",113.53,"Bundesliga",6.768
+23,Who are the teammates of Cristiano Ronaldo at Real Madrid?,"The players are A. Güler, Vallejo, Fran García, Arbeloa, Fábio Coentrão, Odriozola, Brahim, Kiko Casilla, E. Camavinga, and Joselu.",149.849,"Vini Jr.",14.555
+24,Which club does T. Kroos play for?,"He plays for Real Madrid.",88.281,"Real Madrid",6.541
+25,Who are the teammates of K. Mbappé at Paris Saint Germain?,"The players listed are W. Zaïre-Emery, H. Ekitike, B. Barcola, C. Dagba, Lee Kang In, T. Kehrer, Maxwell, A. Diallo, Gonçalo Ramos, and Vitinha.",166.111,"B. Barcola, G. Krychowiak, H. Ekitike",14.251
+26,Which league does G. Buffon play in?,"he plays for Juventus",129.394,"Serie A",7.132
+27,Who are the teammates of R. Lewandowski at FC Bayern München?,"The players listed are T. Starke, E. Choupo-Moting, R. Gravenberch, S. Ulreich, H. Badstuber, S. Rudy, D. Upamecano, N. Mazraoui, Dante, and K. Laimer.",146.571,"The context only lists R. Lewandowski as playing for FC Bayern München; no other teammates are mentioned. Therefore, the information about his teammates is not provided in the context.",9.856
+28,Which club does V. van Dijk play for?,"Final Answer: He plays for Liverpool as a Dutch center-back in the Premier League.",172.985,"Liverpool",6.182
+29,Who are the teammates of M. Salah at Liverpool?,"The players retrieved are Tiago Ilori, R. Lambert, C. Jones, José Enrique, T. Minamino, H. Elliott, K. Tsimikas, H. Wilson, J. Allen, and Alberto Moreno.",220.716,"N. Keïta",12.903
+30,Which league does De Gea play in?,"The Premier League is the top division of English football.",80.599,"Premier League",5.567
+31,Who are the teammates of K. De Bruyne at Manchester City?,"The retrieved players are Z. Steffen, J. Doku, Matheus Nunes, F. Delph, J. Álvarez, S. Ortega, G. Clichy, E. Mangala, M. Demichelis, and W. Bony.",163.511,"V. Kompany",18.783
+32,Which club does H. Kane play for?,"He plays for FC Bayern München.",114.69,"FC Bayern München",6.464
+33,Who are the teammates of P. Dybala at Juventus?,"The players are S. Padoin, F. Miretti, F. Gatti, M. Pjaca, S. Sturaro, N. Fagioli, M. De Sciglio, M. Kean, K. Asamoah, and W. McKennie.",134.875,"M. Pjanić, A. Barzagli, M. Locatelli",11.828
+34,Which league does Vini Jr. play in?,"He is a Brazilian left winger who plays for Real Madrid in La Liga.",101.857,"La Liga",6.33
+35,Who are the teammates of Neymar Jr at Paris Saint Germain?,"The players mentioned are W. Zaïre-Emery, H. Ekitike, B. Barcola, C. Dagba, Lee Kang In, T. Kehrer, Maxwell, A. Diallo, Gonçalo Ramos, and Vitinha.",149.829,"S. Sirigu, Marquinhos, Jesé",12.055
+36,Which club does J. Bellingham play for?,"He plays for Real Madrid.",92.961,"Real Madrid",6.651
+37,Who are the teammates of E. Haaland at Manchester City?,"The players retrieved are Z. Steffen, J. Doku, Matheus Nunes, F. Delph, J. Álvarez, S. Ortega, G. Clichy, E. Mangala, M. Demichelis, and W. Bony.",176.762,"B. Mendy and R. Sterling",13.091
+38,Which league does K. De Bruyne play in?,"The player, a Belgian central attacking midfielder (CAM), plays for Manchester City in the Premier League.",187.193,"Premier League",5.981
+39,Who are the teammates of T. Courtois at Real Madrid?,"The team includes A. Güler, Arbeloa, Brahim, E. Camavinga, Fran García, Fábio Coentrão, Joselu, Kiko Casilla, Odriozola, and Vallejo.",203.748,"A. Tchouaméni, Kiko Casilla, Vallejo",35.656
+40,Which club does G. Donnarumma play for?,"He plays for Paris Saint Germain.",129.23,"Paris Saint Germain",4.774

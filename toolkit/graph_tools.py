@@ -34,7 +34,7 @@ def get_players_by_position(position: str, limit: int = 20):
     query = """
     MATCH (p:Player)-[:HAS_POSITION]->(pos:Position)
     WHERE toLower(pos.name) = toLower($position)
-    RETURN p.name AS name
+    RETURN p.name AS name LIMIT 10
     """
     return run_query(query, {"position": position, "limit": int(limit)})
 
@@ -44,7 +44,7 @@ def get_players_by_nationality(nationality: str, limit: int = 20):
     query = """
     MATCH (p:Player)-[:HAS_NATIONALITY]->(n:Nationality)
     WHERE toLower(n.name) = toLower($nationality)
-    RETURN p.name AS name
+    RETURN p.name AS name LIMIT 10
     """
     return run_query(query, {"nationality": nationality, "limit": int(limit)})
 
@@ -54,7 +54,7 @@ def get_players_by_league(league: str, limit: int = 20):
     query = """
     MATCH (l:League)<-[:PART_OF]-(c:Club)<-[:PLAYS_FOR]-(p:Player)
     WHERE toLower(l.name) = toLower($league)
-    RETURN p.name AS name
+    RETURN p.name AS name LIMIT 10
     """
     return run_query(query, {"league": league, "limit": int(limit)})
 
@@ -64,7 +64,7 @@ def get_players_by_club(club: str, limit: int = 20):
     query = """
     MATCH (c:Club)<-[:PLAYS_FOR]-(p:Player)
     WHERE toLower(c.name) = toLower($club)
-    RETURN p.name AS name
+    RETURN p.name AS name LIMIT 10
     """
     return run_query(query, {"club": club, "limit": int(limit)})
 
@@ -110,7 +110,7 @@ def filter_players(player_names: List[Any], nation: Optional[str] = None, positi
     WHERE ($nation IS NULL OR toLower(n.name) = toLower($nation))
       AND ($position IS NULL OR toLower(pos.name) = toLower($position))
       AND ($club IS NULL OR toLower(c.name) = toLower($club))
-    RETURN DISTINCT p.name AS name
+    RETURN DISTINCT p.name AS name LIMIT 10
     """
     return run_query(query, {
         "player_names": player_names,

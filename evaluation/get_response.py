@@ -24,7 +24,7 @@ except ImportError:
     spec.loader.exec_module(trad_main)
     TraditionRAG = trad_main.TraditionRAG
 
-def run_evaluation():
+def run_evaluation(start_id=None, end_id=None):
     # Paths
     input_csv = os.path.join(project_root, "evaluation", "qa-pair.csv")
     output_csv = os.path.join(project_root, "evaluation", "responses.csv")
@@ -39,8 +39,11 @@ def run_evaluation():
     print(f"[Evaluation] Reading questions from {input_csv}...")
     df = pd.read_csv(input_csv)
     
-    # Initialize output list
-    results = []
+    # Filter by question ID range if specified
+    if start_id is not None:
+        df = df[df['id'] >= start_id]
+    if end_id is not None:
+        df = df[df['id'] <= end_id]
 
     print(f"[Evaluation] Starting collection for {len(df)} questions...")
     
@@ -68,19 +71,22 @@ def run_evaluation():
             trad_res = "ERROR"
             trad_time = 0
 
-        results.append({
+        # Create row DataFrame
+        row_df = pd.DataFrame([{
             "id": qid,
             "question": question,
             "KG_RAG_response": kg_res,
             "KG_RAG_time": round(kg_time, 3),
             "trad_RAG_response": trad_res,
             "trad_RAG_time": round(trad_time, 3)
-        })
+        }])
 
-    # Save to CSV
-    output_df = pd.DataFrame(results)
-    output_df.to_csv(output_csv, index=False)
-    print(f"[Evaluation] Successfully saved {len(results)} responses to {output_csv}")
+        # Append to CSV immediately
+        file_exists = os.path.isfile(output_csv)
+        row_df.to_csv(output_csv, mode='a', header=not file_exists, index=False)
+
+    print(f"[Evaluation] Successfully finished processing the specified range. Incremental results saved to {output_csv}")
 
 if __name__ == "__main__":
-    run_evaluation()
+    # You can specify the question range here, for example: (start_id=1, end_id=10)
+    run_evaluation(start_id=41, end_id=50)

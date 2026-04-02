@@ -20,23 +20,23 @@ class NodeExtractor:
     
     COLUMNS = ['name', 'position', 'nationality', 'club', 'league']
     
-    # Map long-form position names to database short-forms
+    # Map database short-forms to lists of valid textual aliases
     POSITION_MAP = {
-        "striker": "ST",
-        "left wing": "LW",
-        "right wing": "RW",
-        "centre forward": "CF",
-        "left midfield": "LM",
-        "right midfield": "RM",
-        "centre midfield": "CM",
-        "centre attacking midfield": "CAM",
-        "centre defensive midfield": "CDM",
-        "centre back": "CB",
-        "right back": "RB",
-        "left back": "LB",
-        "right wing back": "RWB",
-        "left wing back": "LWB",
-        "goal keeper": "GK"
+        "ST": ["striker", "centre forward"],
+        "LW": ["left wing"],
+        "RW": ["right wing"],
+        "CF": ["centre forward", "striker"],
+        "LM": ["left midfield"],
+        "RM": ["right midfield"],
+        "CM": ["centre midfield"],
+        "CAM": ["centre attacking midfield"],
+        "CDM": ["centre defensive midfield"],
+        "CB": ["centre back"],
+        "RB": ["right back"],
+        "LB": ["left back"],
+        "RWB": ["right wing back"],
+        "LWB": ["left wing back"],
+        "GK": ["goal keeper"]
     }
 
     # Map tool parameter names to CSV column names
@@ -58,6 +58,12 @@ class NodeExtractor:
         
         if os.path.exists(data_path):
             self.df = pd.read_csv(data_path)
+            # Create a flat mapping for O(1) alias lookups
+            self.reverse_position_map = {}
+            for short_form, aliases in self.POSITION_MAP.items():
+                for alias in aliases:
+                    self.reverse_position_map[alias.lower()] = short_form
+            
             self._build_indices()
         else:
             print(f"[ERROR] Data file {data_path} not found.")
@@ -80,7 +86,10 @@ class NodeExtractor:
 
             # Special case for position: index both short and long forms
             if col == 'position':
-                indexed_values = list(set(unique_values + list(self.POSITION_MAP.keys())))
+                all_aliases = []
+                for aliases in self.POSITION_MAP.values():
+                    all_aliases.extend(aliases)
+                indexed_values = list(set(unique_values + all_aliases))
             else:
                 indexed_values = unique_values
                 
@@ -116,14 +125,13 @@ class NodeExtractor:
         # 1. Position Mapping (Special Case)
         if col == 'position':
             normalized = text.strip().lower()
-            # Direct match to short form (case-insensitive check)
-            short_forms = [v.lower() for v in self.POSITION_MAP.values()]
-            if normalized in short_forms:
-                return text.upper()
+            # 1a. Direct match to short form (case-insensitive check)
+            if normalized.upper() in self.POSITION_MAP:
+                return normalized.upper()
             
-            # Match to long form
-            if normalized in self.POSITION_MAP:
-                resolved = self.POSITION_MAP[normalized]
+            # 1b. Direct match to an alias
+            if normalized in self.reverse_position_map:
+                resolved = self.reverse_position_map[normalized]
                 print(f"[NodeExtractor] Position Map: '{text}' -> '{resolved}'")
                 return resolved
 
@@ -143,8 +151,8 @@ class NodeExtractor:
                         print(f"[NodeExtractor] Semantic Resolve: '{text}' -> '{best_match}' (score: {score:.2f})")
                     
                     # Ensure position returns the short form
-                    if col == 'position' and best_match.lower() in self.POSITION_MAP:
-                        return self.POSITION_MAP[best_match.lower()]
+                    if col == 'position' and best_match.lower() in self.reverse_position_map:
+                        return self.reverse_position_map[best_match.lower()]
                     
                     return best_match
             except Exception as e:
@@ -166,8 +174,8 @@ class NodeExtractor:
                 print(f"[NodeExtractor] Fuzzy Resolve: '{text}' -> '{best_match}'")
             
             # Ensure position returns the short form
-            if col == 'position' and best_match.lower() in self.POSITION_MAP:
-                return self.POSITION_MAP[best_match.lower()]
+            if col == 'position' and best_match.lower() in self.reverse_position_map:
+                return self.reverse_position_map[best_match.lower()]
                 
             return best_match
 

@@ -6,7 +6,7 @@ class LocalLLM:
 
     def generate(self, prompt: str):
         payload = {
-            "model": "qwen/qwen3-14b",
+            "model": "qwen/qwen3-4b-thinking-2507",
             "messages": [
                 {"role": "user", "content": prompt}
             ],

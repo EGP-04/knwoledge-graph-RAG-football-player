@@ -1,6 +1,6 @@
 from toolkit.graph_tools import (
     get_player_info,
-    get_players_by_position,
+    get_players_by_position_group,
     get_players_by_nationality,
     get_players_by_league,
     get_players_by_club,
@@ -11,7 +11,7 @@ from toolkit.graph_tools import (
 
 TOOLS = {
     "get_player_info": get_player_info,
-    "get_players_by_position": get_players_by_position,
+    "get_players_by_position_group": get_players_by_position_group,
     "get_players_by_nationality": get_players_by_nationality,
     "get_players_by_league": get_players_by_league,
     "get_players_by_club": get_players_by_club,

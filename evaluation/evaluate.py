@@ -109,7 +109,7 @@ def run_evaluation(responses: pd.DataFrame, qa: pd.DataFrame) -> pd.DataFrame:
 
 def plot(eval_df: pd.DataFrame):
     q_ids    = eval_df["id"].tolist()
-    q_labels = [f"Q{i}" for i in q_ids]
+    q_labels = [f"{i}" for i in q_ids]
 
     kg_times = eval_df["kg_time"].tolist()
     tr_times = eval_df["trad_time"].tolist()
@@ -129,6 +129,7 @@ def plot(eval_df: pd.DataFrame):
 
     plt.title("Response Time per Question")
     plt.xlabel("Question")
+    plt.xticks(fontsize=8)
     plt.ylabel("Time (s)")
     plt.grid(axis="y", alpha=0.3)
     plt.legend()
@@ -144,14 +145,10 @@ def plot(eval_df: pd.DataFrame):
 
     plt.plot(q_labels, kg_f1, marker="o", linewidth=2, color=KG_COLOR)
 
-    for i, val in enumerate(kg_f1):
-        plt.annotate(f"{val:.2f}", (q_labels[i], val),
-                     textcoords="offset points", xytext=(0, 8),
-                     ha='center', fontsize=8)
-
     plt.axhline(sum(kg_f1)/len(kg_f1), linestyle="--")
     plt.title("KG-RAG — Top-K Token Match Score")
     plt.xlabel("Question")
+    plt.xticks(fontsize=8)
     plt.ylabel("Score (0–1)")
     plt.ylim(0, 1.1)
     plt.grid(axis="y", alpha=0.3)
@@ -167,14 +164,10 @@ def plot(eval_df: pd.DataFrame):
 
     plt.plot(q_labels, tr_f1, marker="s", linewidth=2, color=TRAD_COLOR)
 
-    for i, val in enumerate(tr_f1):
-        plt.annotate(f"{val:.2f}", (q_labels[i], val),
-                     textcoords="offset points", xytext=(0, 8),
-                     ha='center', fontsize=8)
-
     plt.axhline(sum(tr_f1)/len(tr_f1), linestyle="--")
     plt.title("Traditional RAG — Top-K Token Match Score")
     plt.xlabel("Question")
+    plt.xticks(fontsize=8)
     plt.ylabel("Score (0–1)")
     plt.ylim(0, 1.1)
     plt.grid(axis="y", alpha=0.3)
